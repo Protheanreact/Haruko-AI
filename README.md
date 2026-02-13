@@ -25,3 +25,5 @@ This repository contains the full "All-In-One" (AIO) setup:
 ---
 **Built with [Trae AI](https://www.trae.ai/)** 🛠️  
 *Pushing the limits of Indie-AI Development.*
+
+⚠️ Note: This is a personal journey and a work in progress. I am sharing this for inspiration, not for benchmarking. Be kind! 🌸
