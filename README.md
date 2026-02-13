@@ -1,3 +1,7 @@
+<img width="425" height="634" alt="image" src="https://github.com/user-attachments/assets/5b99e79a-f57f-4ea4-bafe-e49eb7f5fc97" />
+
+
+
 # 🌸 Haruko AI (v2.7.1)
 ### The "Phygital" Companion | Built for Efficiency
 
