@@ -19,33 +19,34 @@ Kopiere den Ordner an einen Ort deiner Wahl, z.B. `C:\moltbotback`.
    - Installiert Ollama (falls fehlt).
    - Lädt die KI-Modelle (Llama 3 & Llava).
    - Installiert alle Python-Pakete (inkl. dem neuen `ddgs` für die Suche).
+   - Legt optional den Ordner `C:\KI\haruko-whatsapp-bridge` an und erzeugt ein WhatsApp-Bridge-Template (nur auf deinem Server, ohne persönliche Daten).
    *Dauer: ca. 10-20 Minuten (je nach Internet).*
 
-### SCHRITT 2: Autostart Einrichten
-Damit Haruko immer läuft, auch nach einem Stromausfall/Neustart:
-1. Doppelklick auf **`setup_autostart_windows.bat`**.
-2. Das erstellt einen Eintrag im Windows-Startup Ordner.
-3. Fertig.
+### SCHRITT 2: Autostart Einrichten (optional)
+Damit Haruko immer läuft, auch nach einem Stromausfall/Neustart, kannst du einen Autostart über den Windows-Startup-Ordner einrichten:
+1. Drücke `Win + R`, tippe `shell:startup` und bestätige.
+2. Erstelle dort eine Verknüpfung zu `C:\moltbotback\start_haruko_windows.bat`.
+3. Beim nächsten Login startet Haruko automatisch.
 
 ### SCHRITT 3: Erster Start & Test
 1. Doppelklick auf **`start_haruko_windows.bat`**.
-2. Es sollten sich **3 Fenster** öffnen:
+2. Es sollten sich **2 Fenster** öffnen:
    - Backend Server
    - Frontend Server
-   - **Internet Tunnel** (Hier wird dir die URL für den Internet-Zugriff angezeigt)
 3. Öffne den Browser auf dem Server und gehe zu: `http://localhost:5173`.
    - Siehst du Haruko?
    - Bewegt sie sich?
    - Teste die Suche: "Was gibt es neues bei der Formel 1?"
 
 ## 3. ZUGRIFFS-DATEN
-Du hast jetzt drei Wege, Haruko zu erreichen. Alle funktionieren gleichzeitig:
+Du hast jetzt mehrere Wege, Haruko zu erreichen. Alle funktionieren gleichzeitig:
 
 1. **Lokal am Server:** `http://localhost:5173`
 2. **Im Heimnetzwerk (WLAN):** `http://[IP-DES-SERVERS]:5173`
    *(Finde die IP mit `ipconfig` heraus, z.B. 192.168.178.x)*
-3. **Aus dem Internet:** Schau in das Fenster "Haruko Internet Tunnel". Dort steht eine URL wie `https://blabla.loca.lt`.
-   *(Diese URL ändert sich bei jedem Neustart. Du musst sie dir also abschreiben/schicken).*
+3. **Aus dem Internet (optional):**
+   - Für externen Zugriff kannst du selbst einen Tunnel (z.B. Cloudflared) oder einen Reverse Proxy (z.B. nginx auf einem vServer) einrichten.
+   - Standardmäßig richtet Haruko keinen automatischen Internet-Tunnel mehr ein.
 
 ## 4. PORTS & NETZWERK INFOS
 Falls du im Router (FritzBox?) etwas freigeben willst (für LAN-Zugriff), hier sind die Ports:

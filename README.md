@@ -23,8 +23,38 @@ This repository contains the full "All-In-One" (AIO) setup:
 * **Roadmap:** Check [FUTURE_PLANS.md](./FUTURE_PLANS.md) for the path to v3.0.
 
 ## 📖 Documentation
-- **[The Book of Haruko](./THE_BOOK_OF_HARUKO.md):** The full technical evolution from scratch.
-- **[Technical Fact Sheet](./FACT_SHEET_HARUKO.md):** Deep dive into metrics and constraints.
+- **[The Book of Haruko](./release/docs/THE_BOOK_OF_HARUKO.md):** The full technical evolution from scratch.
+- **[Technical Fact Sheet](./release/docs/FACT_SHEET_HARUKO.md):** Deep dive into metrics and constraints.
+
+## 📱 WhatsApp Integration (Local Bridge)
+
+Haruko can be controlled via **WhatsApp Web** using a local bridge script.
+There is no Meta Cloud API involved – everything runs on your own machine.
+
+- A small Node.js script (`haruko-whatsapp.js`) uses:
+  - `whatsapp-web.js`
+  - `qrcode-terminal`
+  - `axios`
+- It logs into your WhatsApp account via QR code (*Linked Devices*).
+- Incoming messages are forwarded to the FastAPI backend (`/whatsapp/incoming`).
+- Haruko’s reply is sent back into the chat.
+
+Security model:
+
+- **Master number**: Full access without a prefix.
+- **Foreign users**: Need a password prefix, e.g. `PASSWORD: turn on the lights`.
+- **Loop protection**: The bridge ignores its own messages to avoid reply loops.
+
+The Windows AIO installer (`install_haruko_aio.ps1`) can optionally:
+
+- Create `C:\KI\haruko-whatsapp-bridge\`.
+- Generate a template `haruko-whatsapp.js` with placeholder values for:
+  - `MASTER_NUMBER = 'YOUR_MASTER_NUMBER_HERE'`
+  - `FOREIGN_PASSWORD = 'CHANGE_ME_PASSWORD'`
+- Install the required Node dependencies inside that folder.
+
+After setup, you start Haruko as usual via `start_haruko_windows.bat` and scan the QR code
+in the WhatsApp bridge window with your phone under **Linked Devices**.
 
 ---
 **Built with [Trae AI](https://www.trae.ai/)** 🛠️  

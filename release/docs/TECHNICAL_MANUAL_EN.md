@@ -209,3 +209,51 @@ This project was designed, conceptualized, and developed by:
 
 **Stephan Eck (Protheanreact)**
 *Lead Developer & UI/UX Designer*
+
+## 12. WhatsApp Web Bridge (Experimental, Local)
+
+In addition to Telegram and the HTTP notification API, Haruko can be controlled
+via a local **WhatsApp Web bridge**. This is an unofficial integration that
+uses your existing WhatsApp account through the browser.
+
+### Architecture
+
+- **Bridge process (Node.js)**  
+  - Recommended path: `C:\KI\haruko-whatsapp-bridge\haruko-whatsapp.js`  
+  - Uses `whatsapp-web.js`, `qrcode-terminal` and `axios`.  
+  - Logs in via QR code and keeps the session using `LocalAuth`.
+
+- **Backend integration (FastAPI)**  
+  - `GET /whatsapp/health` – simple health check for the bridge.  
+  - `POST /whatsapp/incoming` – called by the bridge when a new message arrives.  
+  - Internally calls `process_chat_generator` and returns:
+    ```json
+    { "reply": "<text to send back to WhatsApp>" }
+    ```
+
+### Security & Routing
+
+- **Master number**  
+  - Configured in the bridge script as `MASTER_NUMBER`.  
+  - Messages from this number are treated as fully trusted commands.
+
+- **Group chat**  
+  - Typically a group called `Haruko`.  
+  - Messages from the master are forwarded directly; other participants require a password.
+
+- **Password for foreign users**  
+  - Configured as `FOREIGN_PASSWORD` in the script.  
+  - Syntax:
+    - `PASSWORD: <command>`
+    - `PASSWORD <command>`
+  - The bridge strips the password and forwards only the command text to the backend.
+
+- **Loop protection**  
+  - The bridge stores IDs of all bot messages in a set.  
+  - Incoming messages with these IDs are ignored to avoid infinite reply loops.
+
+### Startup
+
+On Windows, the bridge can be started together with backend and frontend
+from the project root via scripts like `start_haruko_windows.bat`, or via a
+separate Node.js process in `C:\KI\haruko-whatsapp-bridge\`.

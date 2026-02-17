@@ -35,15 +35,30 @@ For best performance and features like **Memory Reflection (Maintenance)** and *
 The setup script is now fully automated and handles dependencies (like C++ Runtimes) and configuration.
 
 #### Windows
-1.  Navigate to the `release/setup` folder.
-2.  Run:
-    ```powershell
-    .\setup_windows.ps1
-    ```
-    - **Language Selection**: The script will ask you to choose a language (DE or EN).
-    - The script will automatically request Admin privileges to install system components.
-    - It will ask for your API Keys (Gemini, Tuya, Telegram) and generate the configuration.
-    *If scripts are disabled: run `Set-ExecutionPolicy RemoteSigned`.*
+You have two options on Windows:
+
+1. **Recommended (AIO Installer from project root)**  
+   - Navigate to the project root (where `setup_windows.bat` is located).
+   - Run:
+     ```powershell
+     .\setup_windows.bat
+     ```
+   - This wrapper calls `install_haruko_aio.ps1` and installs:
+     - Python + backend dependencies
+     - Node.js + frontend dependencies
+     - Ollama + models
+     - Optional tools like the WhatsApp bridge template
+
+2. **Advanced (legacy script in release/setup)**  
+   - Navigate to the `release/setup` folder.
+   - Run:
+     ```powershell
+     .\setup_windows.ps1
+     ```
+   - **Language Selection**: The script will ask you to choose a language (DE or EN).
+   - The script will automatically request Admin privileges to install system components.
+   - It will ask for your API Keys (Gemini, Tuya, Telegram) and generate the configuration.
+   - *If scripts are disabled: run `Set-ExecutionPolicy RemoteSigned`.*
 
 #### Linux / Ubuntu Server
 1.  Navigate to the `release/setup` folder.

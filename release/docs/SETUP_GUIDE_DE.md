@@ -35,15 +35,30 @@ Für die beste Performance und Funktionen wie **Memory Reflection (Gedächtnis-P
 Das Setup-Skript ist nun vollständig automatisiert und kümmert sich um Abhängigkeiten (wie C++ Runtimes) und Konfiguration.
 
 #### Windows
-1.  Navigieren Sie in den Ordner `release/setup`.
-2.  Führen Sie aus:
-    ```powershell
-    .\setup_windows.ps1
-    ```
-    - **Sprachauswahl**: Das Skript fragt Sie nach der gewünschten Sprache (DE oder EN).
-    - Das Skript fordert automatisch Admin-Rechte an, um Systemkomponenten zu installieren.
-    - Es wird Sie nach Ihren API-Keys (Gemini, Tuya, Telegram) fragen und die Konfiguration erstellen.
-    *Falls Skripte deaktiviert sind: `Set-ExecutionPolicy RemoteSigned` ausführen.*
+Es gibt zwei Wege unter Windows:
+
+1. **Empfohlen (AIO-Installer im Projektroot)**  
+   - Navigieren Sie in den Projektordner (dort, wo `setup_windows.bat` liegt).
+   - Führen Sie aus:
+     ```powershell
+     .\setup_windows.bat
+     ```
+   - Dieses Skript ruft `install_haruko_aio.ps1` auf und installiert:
+     - Python + Backend-Abhängigkeiten
+     - Node.js + Frontend-Abhängigkeiten
+     - Ollama + Modelle
+     - Optionale Tools wie die WhatsApp-Bridge-Vorlage
+
+2. **Erweitert (älteres Skript in release/setup)**  
+   - Navigieren Sie in den Ordner `release/setup`.
+   - Führen Sie aus:
+     ```powershell
+     .\setup_windows.ps1
+     ```
+   - **Sprachauswahl**: Das Skript fragt Sie nach der gewünschten Sprache (DE oder EN).
+   - Das Skript fordert automatisch Admin-Rechte an, um Systemkomponenten zu installieren.
+   - Es wird Sie nach Ihren API-Keys (Gemini, Tuya, Telegram) fragen und die Konfiguration erstellen.
+   - *Falls Skripte deaktiviert sind: `Set-ExecutionPolicy RemoteSigned` ausführen.*
 
 #### Linux / Ubuntu Server
 1.  Navigieren Sie in den Ordner `release/setup`.
