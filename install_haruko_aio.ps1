@@ -178,6 +178,154 @@ try {
     Write-Host "Versuche manuell 'ollama pull llama3' und 'ollama pull llava' später." -ForegroundColor Yellow
 }
 
+# 6. WHATSAPP BRIDGE (OPTIONAL)
+Write-Host "---------------------------------------------------" -ForegroundColor Gray
+Write-Host "WhatsApp Web Bridge (Optional)..." -ForegroundColor Cyan
+
+$whatsappDir = "C:\KI\haruko-whatsapp-bridge"
+if (Test-Path $whatsappDir) {
+    Write-Host "[INFO] WhatsApp-Bridge-Ordner existiert bereits: $whatsappDir" -ForegroundColor Gray
+} else {
+    Write-Host "Erstelle WhatsApp-Bridge-Ordner unter $whatsappDir ..." -ForegroundColor White
+    New-Item -ItemType Directory -Path $whatsappDir | Out-Null
+}
+
+$whatsappFile = Join-Path $whatsappDir "haruko-whatsapp.js"
+if (!(Test-Path $whatsappFile)) {
+    Write-Host "Erstelle Beispiel-Skript 'haruko-whatsapp.js' (bitte später anpassen)..." -ForegroundColor White
+    $template = @'
+const { Client, LocalAuth } = require('whatsapp-web.js');
+const qrcode = require('qrcode-terminal');
+const axios = require('axios');
+
+const MASTER_NUMBER = 'YOUR_MASTER_NUMBER_HERE';
+const FOREIGN_PASSWORD = 'CHANGE_ME_PASSWORD';
+
+const BACKEND_BASE = 'http://localhost:8000';
+
+const client = new Client({
+    authStrategy: new LocalAuth(),
+    puppeteer: {
+        headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
+    }
+});
+
+const botMessageIds = new Set();
+
+client.on('qr', qr => {
+    console.clear();
+    console.log('WhatsApp QR-Code (scannen mit Handy, Verknüpfte Geräte):');
+    qrcode.generate(qr, { small: true });
+});
+
+client.on('ready', () => {
+    console.log('WhatsApp-Bridge ist bereit.');
+});
+
+function extractForeignCommand(text) {
+    if (!text) return null;
+    const trimmed = text.trim();
+    const lower = trimmed.toLowerCase();
+    const pw = FOREIGN_PASSWORD.toLowerCase();
+    if (lower.startsWith(pw)) {
+        let rest = trimmed.slice(pw.length);
+        if (rest.startsWith(':') || rest.startsWith('-') || rest.startsWith(' ')) {
+            rest = rest.slice(1).trimStart();
+        }
+        rest = rest.trim();
+        if (!rest) return null;
+        return rest;
+    }
+    return null;
+}
+
+client.on('message_create', async msg => {
+    if (msg.fromMe) {
+        botMessageIds.add(msg.id._serialized);
+    }
+});
+
+client.on('message', async msg => {
+    try {
+        if (botMessageIds.has(msg.id._serialized)) {
+            return;
+        }
+
+        const chat = await msg.getChat();
+        const contact = await msg.getContact();
+
+        const isGroup = chat.isGroup;
+        const isFromMaster = contact.id._serialized.includes(MASTER_NUMBER);
+
+        let text = msg.body || '';
+        let effectiveText = text;
+        let isAuthorizedForeign = false;
+
+        if (!isFromMaster) {
+            const extracted = extractForeignCommand(text);
+            if (!extracted) {
+                return;
+            }
+            effectiveText = extracted;
+            isAuthorizedForeign = true;
+        }
+
+        const effectiveIsMaster = isFromMaster || isAuthorizedForeign;
+        if (!effectiveIsMaster) {
+            return;
+        }
+
+        if (isGroup) {
+            if (!effectiveIsMaster) {
+                return;
+            }
+        }
+
+        const payload = {
+            sender: contact.pushname || contact.number || 'Unknown',
+            chat_id: chat.id._serialized,
+            message: effectiveText
+        };
+
+        const res = await axios.post(`${BACKEND_BASE}/whatsapp/incoming`, payload, { timeout: 60000 });
+        const reply = res.data && res.data.reply ? res.data.reply : null;
+        if (reply) {
+            const sent = await msg.reply(reply);
+            if (sent && sent.id && sent.id._serialized) {
+                botMessageIds.add(sent.id._serialized);
+            }
+        }
+    } catch (err) {
+        console.error('Fehler in WhatsApp-Bridge:', err?.message || err);
+    }
+});
+
+client.initialize();
+'@
+    Set-Content -Path $whatsappFile -Value $template -Encoding UTF8
+
+    Write-Host "[HINWEIS] Bitte passe im WhatsApp-Skript MASTER_NUMBER und FOREIGN_PASSWORD an." -ForegroundColor Yellow
+    Write-Host "         Datei: $whatsappFile" -ForegroundColor Yellow
+} else {
+    Write-Host "[INFO] WhatsApp-Skript existiert bereits, lasse es unverändert." -ForegroundColor Gray
+}
+
+Write-Host "Installiere WhatsApp-Bridge Node-Abhängigkeiten..." -ForegroundColor White
+try {
+    Push-Location $whatsappDir
+    if (!(Test-Path "package.json")) {
+        cmd /c "npm init -y"
+    }
+    cmd /c "npm install whatsapp-web.js qrcode-terminal axios"
+    Write-Host "[OK] WhatsApp-Bridge-Abhängigkeiten installiert." -ForegroundColor Green
+} catch {
+    Write-Host "[WARN] Konnte WhatsApp-Bridge-Abhängigkeiten nicht vollständig installieren: $_" -ForegroundColor Yellow
+    Write-Host "       Du kannst dies später manuell in $whatsappDir nachholen." -ForegroundColor Yellow
+} finally {
+    Pop-Location
+}
+
 # 7. YI IOT CAMERA SETUP
 Write-Host "---------------------------------------------------" -ForegroundColor Gray
 Write-Host "Kamera-Software (Yi IoT)..." -ForegroundColor Cyan
