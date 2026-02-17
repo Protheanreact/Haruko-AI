@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    /* Keeping the specific background color preference */
+    --bg-color: #050505;
+    --text-color: #e0faff;
+  }
+  
+  body {
+    @apply font-sans text-white overflow-hidden m-0 p-0 min-h-screen min-w-[320px];
+    background-color: var(--bg-color);
+    color: var(--text-color);
+  }
+
+  #root {
+    @apply w-screen h-screen relative;
+  }
+}
+
+@layer components {
+  .glass {
+    background: rgba(0, 20, 40, 0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(0, 229, 255, 0.15);
+  }
+  
+  .glow-blue {
+    box-shadow: 0 0 30px rgba(0, 229, 255, 0.2);
+  }
+
+  /* Custom Scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+}
+
+/* Utilities not covered by Tailwind or specific overrides */
+.text-cyan {
+  color: #00e5ff;
+}

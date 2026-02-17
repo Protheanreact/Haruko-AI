@@ -1,0 +1,20 @@
+ANLEITUNG ZUM UPDATE (Release 2.5 - Notification Fix)
+=====================================================
+
+1. Kopiere alle Dateien aus diesem Ordner auf den Server nach C:\KI\moltbotback.
+   - main.py (Backend)
+   - phygital.py (Backend)
+   - App.tsx (Frontend Source - falls Dev-Server läuft)
+
+2. Starte das Backend neu (`start_backend.bat` oder Konsole schließen und neu öffnen).
+
+3. Falls du das Frontend im Dev-Modus (npm run dev) ausführst:
+   - Kopiere die `App.tsx` nach `C:\KI\moltbotback\frontend\src\App.tsx`.
+   - Der Dev-Server lädt automatisch neu.
+
+4. Falls du einen Production-Build nutzt (npm run build):
+   - Musst du auf dem Server im frontend-Ordner `npm run build` ausführen.
+
+HINWEIS:
+- Benachrichtigungen (WhatsApp etc.) werden nun an ALLE aktiven Browser/Tablets gesendet (Broadcast).
+- Die nervige "pkg_resources" Warnung im Backend wurde unterdrückt.

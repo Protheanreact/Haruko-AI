@@ -1,0 +1,21 @@
+{
+  "rooms": {
+    "living_room": {
+      "name": "Living Room",
+      "devices": [
+        {
+          "id": "YOUR_DEVICE_ID",
+          "name": "Lamp",
+          "type": "light",
+          "key": "YOUR_LOCAL_KEY",
+          "ip": "192.168.1.X",
+          "dps_mapping": {
+            "power": "switch_led",
+            "brightness": "bright_value_v2",
+            "color": "colour_data_v2"
+          }
+        }
+      ]
+    }
+  }
+}
